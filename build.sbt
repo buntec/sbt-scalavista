@@ -1,12 +1,16 @@
+ThisBuild / version := "0.1.0"
+ThisBuild / organization := "org.scalavista"
+ThisBuild / description := "sbt plugin for generating scalavista config files"
+
+ThisBuild / licenses += ("MIT", url("https://opensource.org/licenses/MIT"))
 
 lazy val root = (project in file(".")).
-  // enablePlugins(GitVersioning).
   settings(
-    version := "0.1.0-SNAPSHOT",
-    organization := "org.scalavista",
     sbtPlugin := true,
     name := "sbt-scalavista",
-    description := "sbt plugin to create config file for scalavista",
+    publishMavenStyle := false,
+    bintrayRepository := "sbt-plugins",
+    bintrayOrganization in bintray := None,
     scalacOptions := Seq("-deprecation", "-unchecked"),
     libraryDependencies += "io.spray" %%  "spray-json" % "1.3.5"
   )
