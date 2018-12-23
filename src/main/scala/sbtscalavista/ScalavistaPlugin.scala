@@ -8,6 +8,9 @@ import sbt._
 import sbt.Keys._
 
 object ScalavistaPlugin extends AutoPlugin {
+
+  private val filter = ScopeFilter(inAnyProject, inAnyConfiguration) // this is needed for multi-project builds
+
   // by defining autoImport, the settings are automatically imported into user's `*.sbt`
   object autoImport {
     // configuration points, like the built-in `version`, `libraryDependencies`, or `compile`
@@ -16,7 +19,7 @@ object ScalavistaPlugin extends AutoPlugin {
     // default values for the tasks and settings
     lazy val baseScalavistaSettings: Seq[Def.Setting[_]] = Seq(
       generateScalavistaConfig := {
-        GenerateConfig(sources.value, dependencyClasspath.value, scalaBinaryVersion.value, scalacOptions.value)
+        GenerateConfig((sources ?? Nil).all(filter).value.flatten, (dependencyClasspath ?? Nil).all(filter).value.flatten, scalaBinaryVersion.value, scalacOptions.value)
       }
     )
   }
@@ -34,16 +37,25 @@ object ScalavistaPlugin extends AutoPlugin {
 }
 
 object GenerateConfig {
-  def apply(sources: Seq[File], classpath: Seq[Attributed[File]], scalaBinaryVersion: String, scalacOptions: Seq[String]): Unit = {
+
+  def apply(sources: Seq[File], classpath: Seq[Attributed[File]], 
+            scalaBinaryVersion: String, scalacOptions: Seq[String]): Unit = {
+
     val json = JsObject(
-      "classpath" -> classpath.map(_.data).mkString(":").toJson,
-      "sources" -> sources.map(_.toString).toJson,
+      "classpath" -> classpath.map(_.data).distinct.mkString(":").toJson,
+      "sources" -> sources.map(_.toString).distinct.toJson,
       "scalaBinaryVersion" -> scalaBinaryVersion.toJson,
       "scalacOptions" -> scalacOptions.toJson
       ).prettyPrint
+
     val file = new File("scalavista.json")
+
     val bw = new BufferedWriter(new FileWriter(file))
+
     bw.write(json)
+
     bw.close()
+
   }
+
 }
