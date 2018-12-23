@@ -1,4 +1,4 @@
-ThisBuild / version := "0.1.1-SNAPSHOT"
+ThisBuild / version := "0.1.1"
 ThisBuild / organization := "org.scalavista"
 ThisBuild / description := "sbt plugin for generating scalavista config files"
 
