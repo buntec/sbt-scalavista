@@ -15,10 +15,14 @@ object ScalavistaPlugin extends AutoPlugin {
   object autoImport {
     // configuration points, like the built-in `version`, `libraryDependencies`, or `compile`
     lazy val generateScalavistaConfig = taskKey[Unit]("generates scalavista.json")
+    lazy val generateCombinedScalavistaConfig = taskKey[Unit]("generates a single scalavista.json for all subprojects - this may not be a good idea if your projects use different Scala versions etc.")
 
     // default values for the tasks and settings
     lazy val baseScalavistaSettings: Seq[Def.Setting[_]] = Seq(
       generateScalavistaConfig := {
+        GenerateConfig(sources.value, dependencyClasspath.value, scalaBinaryVersion.value, scalacOptions.value)
+        },
+      generateCombinedScalavistaConfig := {
         GenerateConfig((sources ?? Nil).all(filter).value.flatten, (dependencyClasspath ?? Nil).all(filter).value.flatten, scalaBinaryVersion.value, scalacOptions.value)
       }
     )
@@ -42,8 +46,8 @@ object GenerateConfig {
             scalaBinaryVersion: String, scalacOptions: Seq[String]): Unit = {
 
     val json = JsObject(
-      "classpath" -> classpath.map(_.data).distinct.mkString(":").toJson,
-      "sources" -> sources.map(_.toString).distinct.toJson,
+      "classpath" -> classpath.map(_.data.toString).distinct.toJson,
+      "sources" -> sources.map(_.toString).filter(_.endsWith(".scala")).distinct.toJson,
       "scalaBinaryVersion" -> scalaBinaryVersion.toJson,
       "scalacOptions" -> scalacOptions.toJson
       ).prettyPrint
