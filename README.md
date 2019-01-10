@@ -10,21 +10,21 @@ Visual Studio Code extension. Please refer to those projects for more informatio
 Add this to `project/plugins.sbt` (or globally to `.sbt/1.0/plugins/plugins.sbt`):
 
 ```
-addSbtPlugin("org.scalavista" % "sbt-scalavista" % "0.1.2")
+addSbtPlugin("org.scalavista" % "sbt-scalavista" % "0.1.3")
 ```
 
-Most of the time it suffices to run:
+In most cases it suffices to run:
 
 ```
-sbt generateCombinedScalavistaConfig
+sbt generateScalavistaConfig
 ```
 
-This task will try to combine your sources and dependencies across projects/configurations. 
-If you need more control you can use `generateScalavistaConfig`, 
-which can be scoped, e.g., `Test / generateScalavistaConfig`.
+This task will combine your sources and dependencies across projects/configurations.
+If you need more control you can use `generateScopedScalavistaConfig`,
+which can be scoped, e.g., `projA / Test / generateScopedScalavistaConfig`.
 
-Either of the above produces a `scalavista.json` file at the root of your project. 
-Re-generate it when the structure of your project changes (dependencies, compiler options, etc.).
+Either of the above produces a `scalavista.json` file at the root of your project.
+Re-generate it whenever the structure of your project changes (dependencies, compiler options, etc.).
 
 ## Disclaimer
 
