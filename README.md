@@ -10,7 +10,7 @@ Visual Studio Code extension. Please refer to those projects for more informatio
 Add this to `project/plugins.sbt` (or globally to `.sbt/1.0/plugins/plugins.sbt`):
 
 ```
-addSbtPlugin("org.scalavista" % "sbt-scalavista" % "0.1.3")
+addSbtPlugin("org.scalavista" % "sbt-scalavista" % "0.1.4")
 ```
 
 In most cases it suffices to run:
@@ -26,6 +26,7 @@ which can be scoped, e.g., `projA / Test / generateScopedScalavistaConfig`.
 Either of the above produces a `scalavista.json` file at the root of your project.
 Re-generate it whenever the structure of your project changes (dependencies, compiler options, etc.).
 
-## Disclaimer
+## Known Issues
 
-This project is in alpha stage and should be considered unstable.
+If the generated `scalavista.json` is corrupted (not a valid json), re-running the task
+once or twice should do the trick.
