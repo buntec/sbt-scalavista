@@ -1,11 +1,11 @@
 package sbtscalavista
 
-import java.io._
 import spray.json._
 import DefaultJsonProtocol._ // if you don't supply your own Protocol (see below)
 
 import sbt._
 import sbt.Keys._
+import sbt.IO
 
 object ScalavistaPlugin extends AutoPlugin {
 
@@ -53,9 +53,7 @@ object GenerateConfig {
       ).prettyPrint
 
     val file = new File("scalavista.json")
-    val bw = new BufferedWriter(new FileWriter(file))
-    bw.write(json)
-    bw.close()
+    IO.write(file, json)
 
   }
 
